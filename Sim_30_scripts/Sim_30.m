@@ -122,7 +122,7 @@ for t=1:nRlz
 	    % Generate random realizations of signal + noise
 	    %
         Noise = create_noise(wdim, 'homo', 1, smo, trnind);
-        Noise = Noise.*non_stationary_sd;
+        Noise = Noise.*non_stationary_var;
         tImgs = Sig + Noise; % Creates the true image of smoothed signal + smoothed noise        
         tImgs = reshape(tImgs, [prod(dim), 1]);
         
@@ -174,6 +174,10 @@ for t=1:nRlz
       end 
     
     transformed_observed_cohen_d     = reshape(transformed_observed_cohen_d, dim);
+        
+    supGa_raw_80                     = prctile(supG_raw, 80);
+    supGa_raw_90                     = prctile(supG_raw, 90);
+    supGa_raw_95                     = prctile(supG_raw, 95);
     
     % Gaussian random variable results for the true and estimated boundary
     % True boundary

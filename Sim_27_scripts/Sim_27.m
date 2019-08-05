@@ -160,15 +160,25 @@ for t=1:nRlz
           % True boundary
           boundary_bootstrap                = resid_boundary_values*spdiags(signflips, 0, nSubj, nSubj);
           boundary_resid_field              = sum(boundary_bootstrap, 2)/sqrt(nSubj);
+          % Re-standardizing by bootstrap standard deviation
+          boot_std                          = std(boundary_bootstrap, 0, 2);
+          boundary_resid_field              = boundary_resid_field./boot_std;
           supG_raw(k)                       = max(abs(boundary_resid_field));
           
           % Estimated boundary
           observed_boundary_bootstrap       = observed_resid_boundary_values*spdiags(signflips, 0, nSubj, nSubj);
           observed_boundary_resid_field     = sum(observed_boundary_bootstrap, 2)/sqrt(nSubj); 
+          % Re-standardizing by bootstrap standard deviation
+          observed_boot_std                 = std(observed_boundary_bootstrap, 0, 2);
+          observed_boundary_resid_field     = observed_boundary_resid_field./observed_boot_std;
           supG_observed(k)                  = max(abs(observed_boundary_resid_field));
       end 
     
     transformed_observed_cohen_d     = reshape(transformed_observed_cohen_d, dim);
+    
+    supGa_raw_80                     = prctile(supG_raw, 80);
+    supGa_raw_90                     = prctile(supG_raw, 90);
+    supGa_raw_95                     = prctile(supG_raw, 95);
     
     % Gaussian random variable results for the true and estimated boundary
     % True boundary

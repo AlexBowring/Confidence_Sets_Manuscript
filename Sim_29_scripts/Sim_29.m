@@ -112,7 +112,7 @@ for t=1:nRlz
 	    % Generate random realizations of signal + noise
 	    %
         Noise = create_noise(wdim, 'homo', 1, smo, trnind);
-        Noise = Noise.*non_stationary_sd;
+        Noise = Noise.*non_stationary_var;
         tImgs = Sig + Noise; % Creates the true image of smoothed signal + smoothed noise        
         tImgs = reshape(tImgs, [prod(dim), 1]);
         
