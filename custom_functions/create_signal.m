@@ -49,7 +49,6 @@ switch(signal_type)
         ss   = spm_smooth(Sig,Sigs,smo*ones(1,3));
         % Truncate to avoid edge effects
         tSigs          = Sigs(trnind{1}, trnind{2}, trnind{3});
-        tSigs(tSigs>=1)= 1;
         maxtSigs       = max(tSigs(:));
         Y              = (param(1)/maxtSigs)*tSigs;    
     case 'multi'
@@ -63,6 +62,7 @@ switch(signal_type)
         % Truncate to avoid edge effects
         tSigs          = Sigs(trnind{1}, trnind{2}, trnind{3});
         maxtSigs       = max(tSigs(:));
+        tSigs(tSigs>=1)= 1;
         Y              = (param/maxtSigs)*tSigs;   
 end
 
