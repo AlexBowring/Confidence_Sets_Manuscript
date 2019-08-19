@@ -60,9 +60,9 @@ switch(signal_type)
         Sigs = zeros(dim);
         ss   = spm_smooth(Sig,Sigs,smo*ones(1,3));
         % Truncate to avoid edge effects
-        tSigs          = Sigs(trnind{1}, trnind{2}, trnind{3});
-        maxtSigs       = max(tSigs(:));
-        tSigs(tSigs>=1)= 1;
-        Y              = (param/maxtSigs)*tSigs;   
+        tSigs              = Sigs(trnind{1}, trnind{2}, trnind{3});
+        tSigs(tSigs>=param)= param;
+        maxtSigs           = max(tSigs(:));
+        Y                  = (param/maxtSigs)*tSigs;   
 end
 
