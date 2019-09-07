@@ -8,7 +8,7 @@ nominal_vec      = ["nom_80_results","nom_90_results","nom_95_results"];
 signal_vec       = ["1","2"];
 signal_title_vec = ["Ramp", "Circle"];
 std_vec          = ["1","2"];
-std_title_vec    = ["Homo. Variance", "Hetro. Variance"];
+std_title_vec    = ["Homo. Variance", "Hetero. Variance"];
 color_vec        = 'rbm';
 color_title_vec  = ["Algorithm 1", "Algorithm 2", "Algorithm 3"];
 
@@ -45,15 +45,19 @@ for i = 1:length(signal_vec)
             % put label onto the axis
             xlabel('Sample Size [N]');
             ylabel('Emp. Covering Rate');
-
-            titlename = {sprintf(signal_title_vec(i) + ' (%d%% Nom.)', results_params.(percent).nominal_level), std_title_vec(j)};
+            
+            if j == 1 
+                titlename = {sprintf(signal_title_vec(i) + ' (%d%% Nom.)', results_params.(percent).nominal_level), std_title_vec(j)};
+            else
+                titlename =  std_title_vec(j); 
+            end
             title(titlename);
 
             set(gca, 'fontsize', 18);
             axis square;
             hold off
 
-            if k == length(nominal_vec)
+            if [k,j] == [length(nominal_vec),length(std_vec)] 
                 % create legend
                 lgd = legend('Algorithm 1', ...
                              'Algorithm 2', ...
@@ -64,14 +68,16 @@ for i = 1:length(signal_vec)
             end   
 
         end
-
-        lgd_plot = subplot(2,3,5);
-        axis square;
-        pos_lgd  = get(lgd_plot,'position');
-        lgd.FontWeight = 'bold';
-        set(lgd,'position', [pos_lgd(1), pos_lgd(2) + 0.2, pos_lgd(3), pos_lgd(4) - 0.2]);
-        set(lgd, 'interpreter', 'tex');
-        axis(lgd_plot,'off');
+        
+        if j == length(std_vec)
+            lgd_plot = subplot(2,3,5);
+            axis square;
+            pos_lgd  = get(lgd_plot,'position');
+            lgd.FontWeight = 'bold';
+            set(lgd,'position', [pos_lgd(1), pos_lgd(2) + 0.2, pos_lgd(3), pos_lgd(4) - 0.2]);
+            set(lgd, 'interpreter', 'tex');
+            axis(lgd_plot,'off');
+        end
 
         set(gcf,'position', [-21,120,1195,682]);
         fh = gcf;
