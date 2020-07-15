@@ -2,20 +2,20 @@
 basedir = '/well/nichols/projects/UKB/IMAGING/ContourInf/MNI';
 
 % Directory to save images to
-outdir = '/Users/maullz/Desktop/test';
+outdir = '/well/nichols/users/bas627/Confidence_Sets_Manuscript/Biobank_simulation/ground_truth_files';
 
 % Path to MNI mask image;
-MNI_mask_file = '/usr/local/fsl/data/standard/MNI152_T1_2mm_brain_mask.nii.gz';
+MNI_mask_file = '/well/nichols/shared/fsl/6.0.3/data/standard/MNI152_T1_2mm_brain_mask.nii.gz';
 
 
 % List all copefiles in the directory
-%%cope_files = cellstr(spm_select('FPList', basedir, ['.*\_cope5_MNI.nii.gz']));
-%%mask_files = cellstr(spm_select('FPList', basedir, ['.*\_mask_MNI.nii.gz']));
-cope_files = cellstr(spm_select('FPList', basedir, ['.*\cope.nii.gz']));
+cope_files = cellstr(spm_select('FPList', basedir, ['.*\_cope5_MNI.nii.gz']));
+mask_files = cellstr(spm_select('FPList', basedir, ['.*\_mask_MNI.nii.gz']));
+%%cope_files = cellstr(spm_select('FPList', basedir, ['.*\cope.nii.gz']));
 
 % Select 4000 random copes from the total 8945 available
-shuffle_ids = randperm(length(cope_files)); 
-%%shuffle_ids = randperm(8945, 4000);
+%%shuffle_ids = randperm(length(cope_files)); 
+shuffle_ids = randperm(8945, 4000);
 
 
 dim = [91, 109, 91];
@@ -26,12 +26,12 @@ maskmat = zeros([prod(dim) length(shuffle_ids)]);
 
 for i=1:length(shuffle_ids)
     VY = spm_vol(cope_files{shuffle_ids(i)});
-    VM = (reshape(spm_read_vols(VY), [prod(dim) 1]) ~= 0);
-    %%VM = spm_vol(mask_files{shuffle_ids(i)});
+    %%VM = (reshape(spm_read_vols(VY), [prod(dim) 1]) ~= 0);
+    VM = spm_vol(mask_files{shuffle_ids(i)});
     datamat(:,i) = reshape(spm_read_vols(VY), [prod(dim) 1]);
     datamat_squared(:,i) = reshape(spm_read_vols(VY), [prod(dim) 1]).^2; 
-    maskmat(:,i) = VM;
-    %%maskmat(:,i) = reshape(spm_read_vols(VM), [prod(dim) 1]);
+    %%maskmat(:,i) = VM;
+    maskmat(:,i) = reshape(spm_read_vols(VM), [prod(dim) 1]);
 end
 
 sum_datamat = sum(datamat,2);
