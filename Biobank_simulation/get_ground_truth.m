@@ -62,7 +62,7 @@ sum_maskmat = reshape(sum_maskmat, dim);
 
 sum_maskmat_minus_one = sum_maskmat - ones(dim); 
 
-more_than_100 = (sum(maskmat,2) > 99);
+more_than_100 = (sum_maskmat > 99);
 more_than_100 = reshape(more_than_100, dim);
 
 sample_mean = sum_datamat./sum_maskmat;
