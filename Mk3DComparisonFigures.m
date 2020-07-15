@@ -1,4 +1,4 @@
-results_mat_dir = '/Users/maullz/Desktop/Confidence_Sets_Manuscript/Figures/3D_Figures';
+results_mat_dir = '/Users/maullz/Desktop/Work_Folders/Confidence_Sets_Manuscript/Figures/3D_Figures';
 
 results_mat_file = fullfile(results_mat_dir,'3DResults.mat');
 
@@ -35,11 +35,11 @@ for i = 1:length(signal_vec)
                 end
                 % plot the nominal lvl
                 nominal_prct_level = results_params.(percent).nominal_prct_level;
-                plot([subs(1)-5, subs(end)+5], [nominal_prct_level nominal_prct_level], 'k', 'linewidth', 1.5)
-                plot([subs(1)-5, subs(end)+5], [nominal_prct_level-1.96*results_params.(percent).std_error nominal_prct_level-1.96*results_params.(percent).std_error], 'k--')
-                plot([subs(1)-5, subs(end)+5], [nominal_prct_level+1.96*results_params.(percent).std_error nominal_prct_level+1.96*results_params.(percent).std_error], 'k--')
+                plot([subs(1)-30, subs(end)+5], [nominal_prct_level nominal_prct_level], 'k', 'linewidth', 1.5)
+                plot([subs(1)-30, subs(end)+5], [nominal_prct_level-1.96*results_params.(percent).std_error nominal_prct_level-1.96*results_params.(percent).std_error], 'k--')
+                plot([subs(1)-30, subs(end)+5], [nominal_prct_level+1.96*results_params.(percent).std_error nominal_prct_level+1.96*results_params.(percent).std_error], 'k--')
                 % set the range for the axis
-                xlim([subs(1)-5, subs(end)+5])
+                xlim([subs(1)-30, subs(end)+5])
                 ylim([y_lim - 0.05 1]);
                 % specify tiks
                 xticks(subs)
@@ -54,7 +54,7 @@ for i = 1:length(signal_vec)
                 end
                 title(titlename);
 
-                set(gca, 'fontsize', 18);
+                set(gca, 'fontsize', 12);
                 axis square;
                 hold off
 
