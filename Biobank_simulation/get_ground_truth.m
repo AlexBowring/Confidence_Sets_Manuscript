@@ -45,9 +45,7 @@ for i=1:length(shuffle_ids)
     
     % Delete copied and gunzipped mask and cope files now we are done
     delete(fullfile(outdir, cope_name));
-    delete(fullfile(outdir, [cope_name cope_ext]));
     delete(fullfile(outdir, mask_name));
-    delete(fullfile(outdir, [mask_name mask_ext]));
     
 end
 
