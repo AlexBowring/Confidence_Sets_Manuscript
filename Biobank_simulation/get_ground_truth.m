@@ -20,27 +20,24 @@ shuffle_ids = randperm(8945, 4000);
 
 dim = [91, 109, 91];
 % Empty datamat, datamat_squared and maskmat for loading in the copes
-datamat = zeros([prod(dim) length(shuffle_ids)]);
-datamat_squared = zeros([prod(dim) length(shuffle_ids)]);
-maskmat = zeros([prod(dim) length(shuffle_ids)]);
+sum_datamat = zeros([prod(dim) 1]);
+sum_datamat_squared = zeros([prod(dim) 1]);
+sum_maskmat = zeros([prod(dim) 1]);
+
 
 for i=1:length(shuffle_ids)
     VY = spm_vol(cope_files{shuffle_ids(i)});
     %%VM = (reshape(spm_read_vols(VY), [prod(dim) 1]) ~= 0);
     VM = spm_vol(mask_files{shuffle_ids(i)});
-    datamat(:,i) = reshape(spm_read_vols(VY), [prod(dim) 1]);
-    datamat_squared(:,i) = reshape(spm_read_vols(VY), [prod(dim) 1]).^2; 
-    %%maskmat(:,i) = VM;
-    maskmat(:,i) = reshape(spm_read_vols(VM), [prod(dim) 1]);
+    sum_datamat = sum_datamat + reshape(spm_read_vols(VY), [prod(dim) 1]);
+    sum_datamat_squard = sum_datamat_squared + reshape(spm_read_vols(VY), [prod(dim) 1]).^2;
+    sum_maskmat = sum_maskmat + reshape(spm_read_vols(VM), [prod(dim) 1]);
 end
 
-sum_datamat = sum(datamat,2);
 sum_datamat = reshape(sum_datamat, dim);
 
-sum_datamat_squared = sum(datamat_squared,2);
 sum_datamat_squared = reshape(sum_datamat_squared, dim);
 
-sum_maskmat = sum(maskmat,2);
 sum_maskmat = reshape(sum_maskmat, dim);
 
 sum_maskmat_minus_one = sum_maskmat - ones(dim); 
