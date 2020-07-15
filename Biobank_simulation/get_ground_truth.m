@@ -9,9 +9,9 @@ MNI_mask_file = '/well/nichols/shared/fsl/6.0.3/data/standard/MNI152_T1_2mm_brai
 
 
 % List all copefiles in the directory
-%cope_files = cellstr(spm_select('FPList', basedir, ['.*\_cope5_MNI.nii.gz']));
-%mask_files = cellstr(spm_select('FPList', basedir, ['.*\_mask_MNI.nii.gz']));
-cope_files = cellstr(spm_select('FPList', basedir, ['.*\cope.nii.gz']));
+cope_files = cellstr(spm_select('FPList', basedir, ['.*\_cope5_MNI.nii.gz']));
+mask_files = cellstr(spm_select('FPList', basedir, ['.*\_mask_MNI.nii.gz']));
+%cope_files = cellstr(spm_select('FPList', basedir, ['.*\cope.nii.gz']));
 
 % Select 4000 random copes from the total 8945 available
 shuffle_ids = randperm(length(cope_files)); 
