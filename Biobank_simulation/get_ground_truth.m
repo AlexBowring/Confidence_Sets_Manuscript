@@ -29,8 +29,12 @@ for i=1:length(shuffle_ids)
     % We have to gunzip the files, Octave can't work with compressed files
     [mask_filepath, mask_name, mask_ext] = fileparts(mask_files{shuffle_ids(i)});
     [cope_filepath, cope_name, cope_ext] = fileparts(cope_files{shuffle_ids(i)});
-    gunzip(cope_files{shuffle_ids(i)}, outdir);
-    gunzip(mask_files{shuffle_ids(i)}, outdir);
+    
+    copyfile(cope_files{shuffle_ids(i)}, outdir);
+    copyfile(mask_files{shuffle_ids(i)}, outdir)
+    
+    gunzip(fullfile(outdir, [cope_name cope_ext]));
+    gunzip(fullfile(outdir, [mask_name mask_ext]));
     
     VY = spm_vol(cope_files{shuffle_ids(i)});
     %%VM = (reshape(spm_read_vols(VY), [prod(dim) 1]) ~= 0);
@@ -39,9 +43,12 @@ for i=1:length(shuffle_ids)
     sum_datamat_squard = sum_datamat_squared + reshape(spm_read_vols(VY), [prod(dim) 1]).^2;
     sum_maskmat = sum_maskmat + reshape(spm_read_vols(VM), [prod(dim) 1]);
     
-    % Delete gunzipped mask and cope files now we are done
-    delete(fullfile(outdir, mask_name));
+    % Delete copied and gunzipped mask and cope files now we are done
     delete(fullfile(outdir, cope_name));
+    delete(fullfile(outdir, [cope_name cope_ext]));
+    delete(fullfile(outdir, mask_name));
+    delete(fullfile(outdir, [mask_name mask_ext]));
+    
 end
 
 sum_datamat = reshape(sum_datamat, dim);
