@@ -6,6 +6,11 @@ outdir = '/well/nichols/users/bas627/Confidence_Sets_Manuscript/Biobank_simulati
 
 % Path to MNI mask image;
 MNI_mask_file = '/well/nichols/shared/fsl/6.0.3/data/standard/MNI152_T1_2mm_brain_mask.nii.gz';
+% Copying and gunzipping because Octave cant handle .gz files 
+[MNI_mask_filepath, MNI_mask_name, MNI_mask_ext] = fileparts(MNI_mask_file);
+copyfile(MNI_mask_file, outdir);
+gunzip(fullfile(outdir, [MNI_mask_name MNI_mask_ext]));
+MNI_mask_file = fullfile(outdir, MNI_mask_name);
 
 
 % List all copefiles in the directory
