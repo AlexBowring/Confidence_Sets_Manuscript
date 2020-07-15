@@ -9,13 +9,13 @@ MNI_mask_file = '/well/nichols/shared/fsl/6.0.3/data/standard/MNI152_T1_2mm_brai
 
 
 % List all copefiles in the directory
-cope_files = cellstr(spm_select('FPList', basedir, ['.*\_cope5_MNI.nii.gz']));
-mask_files = cellstr(spm_select('FPList', basedir, ['.*\_mask_MNI.nii.gz']));
-%%cope_files = cellstr(spm_select('FPList', basedir, ['.*\cope.nii.gz']));
+%cope_files = cellstr(spm_select('FPList', basedir, ['.*\_cope5_MNI.nii.gz']));
+%mask_files = cellstr(spm_select('FPList', basedir, ['.*\_mask_MNI.nii.gz']));
+cope_files = cellstr(spm_select('FPList', basedir, ['.*\cope.nii.gz']));
 
 % Select 4000 random copes from the total 8945 available
-%%shuffle_ids = randperm(length(cope_files)); 
-shuffle_ids = randperm(8945, 4000);
+shuffle_ids = randperm(length(cope_files)); 
+%shuffle_ids = randperm(8945, 4000);
 
 
 dim = [91, 109, 91];
@@ -26,12 +26,22 @@ sum_maskmat = zeros([prod(dim) 1]);
 
 
 for i=1:length(shuffle_ids)
+    % We have to gunzip the files, Octave can't work with compressed files
+    [mask_filepath, mask_name, mask_ext] = fileparts(mask_files{shuffle_ids(i)});
+    [cope_filepath, cope_name, cope_ext] = fileparts(cope_files{shuffle_ids(i)});
+    gunzip(cope_files{shuffle_ids(i)}, outdir);
+    gunzip(mask_files{shuffle_ids(i)}, outdir);
+    
     VY = spm_vol(cope_files{shuffle_ids(i)});
     %%VM = (reshape(spm_read_vols(VY), [prod(dim) 1]) ~= 0);
     VM = spm_vol(mask_files{shuffle_ids(i)});
     sum_datamat = sum_datamat + reshape(spm_read_vols(VY), [prod(dim) 1]);
     sum_datamat_squard = sum_datamat_squared + reshape(spm_read_vols(VY), [prod(dim) 1]).^2;
     sum_maskmat = sum_maskmat + reshape(spm_read_vols(VM), [prod(dim) 1]);
+    
+    % Delete gunzipped mask and cope files now we are done
+    delete(fullfile(outdir, mask_name));
+    delete(fullfile(outdir, cope_name));
 end
 
 sum_datamat = reshape(sum_datamat, dim);
