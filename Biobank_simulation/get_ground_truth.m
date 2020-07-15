@@ -31,14 +31,14 @@ for i=1:length(shuffle_ids)
     [cope_filepath, cope_name, cope_ext] = fileparts(cope_files{shuffle_ids(i)});
     
     copyfile(cope_files{shuffle_ids(i)}, outdir);
-    copyfile(mask_files{shuffle_ids(i)}, outdir)
+    copyfile(mask_files{shuffle_ids(i)}, outdir);
     
     gunzip(fullfile(outdir, [cope_name cope_ext]));
     gunzip(fullfile(outdir, [mask_name mask_ext]));
     
-    VY = spm_vol(cope_files{shuffle_ids(i)});
+    VY = spm_vol(fullfile(outdir, [cope_name cope_ext]));
     %%VM = (reshape(spm_read_vols(VY), [prod(dim) 1]) ~= 0);
-    VM = spm_vol(mask_files{shuffle_ids(i)});
+    VM = spm_vol(fullfile(outdir, [mask_name mask_ext]));
     sum_datamat = sum_datamat + reshape(spm_read_vols(VY), [prod(dim) 1]);
     sum_datamat_squard = sum_datamat_squared + reshape(spm_read_vols(VY), [prod(dim) 1]).^2;
     sum_maskmat = sum_maskmat + reshape(spm_read_vols(VM), [prod(dim) 1]);
