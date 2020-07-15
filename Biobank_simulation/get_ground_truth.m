@@ -36,9 +36,9 @@ for i=1:length(shuffle_ids)
     gunzip(fullfile(outdir, [cope_name cope_ext]));
     gunzip(fullfile(outdir, [mask_name mask_ext]));
     
-    VY = spm_vol(fullfile(outdir, [cope_name cope_ext]));
+    VY = spm_vol(fullfile(outdir, cope_name));
     %%VM = (reshape(spm_read_vols(VY), [prod(dim) 1]) ~= 0);
-    VM = spm_vol(fullfile(outdir, [mask_name mask_ext]));
+    VM = spm_vol(fullfile(outdir, mask_name));
     sum_datamat = sum_datamat + reshape(spm_read_vols(VY), [prod(dim) 1]);
     sum_datamat_squard = sum_datamat_squared + reshape(spm_read_vols(VY), [prod(dim) 1]).^2;
     sum_maskmat = sum_maskmat + reshape(spm_read_vols(VM), [prod(dim) 1]);
