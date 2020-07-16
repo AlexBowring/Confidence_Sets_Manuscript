@@ -76,11 +76,6 @@ sample_sd = sqrt(sample_variance);
 sample_cohens_d = sample_mean./sample_sd;
 sample_cohens_d(isnan(sample_cohens_d)|isinf(sample_cohens_d)) = 0;
 
-sample_cohens_d_threshold_02 = sample_cohens_d > 0.2;
-sample_cohens_d_threshold_05 = sample_cohens_d > 0.5;
-sample_cohens_d_threshold_08 = sample_cohens_d > 0.8;
-sample_cohens_d_threshold_12 = sample_cohens_d > 1.2;
-
 % Finally, mask all important images with the MNI152 mask
 MNI_mask = spm_vol(MNI_mask_file);
 MNI_mask = spm_read_vols(MNI_mask);
@@ -89,6 +84,11 @@ sample_mean = sample_mean.*MNI_mask;
 sample_sd = sample_sd.*MNI_mask;
 sample_cohens_d = sample_cohens_d.*MNI_mask;
 more_than_100 = more_than_100.*MNI_mask;
+
+sample_cohens_d_threshold_02 = sample_cohens_d > 0.2;
+sample_cohens_d_threshold_05 = sample_cohens_d > 0.5;
+sample_cohens_d_threshold_08 = sample_cohens_d > 0.8;
+sample_cohens_d_threshold_12 = sample_cohens_d > 1.2;
 
 % Save images of interest
 % Cohen's d image
