@@ -79,6 +79,7 @@ sample_cohens_d(isnan(sample_cohens_d)|isinf(sample_cohens_d)) = 0;
 sample_cohens_d_threshold_02 = sample_cohens_d > 0.2;
 sample_cohens_d_threshold_05 = sample_cohens_d > 0.5;
 sample_cohens_d_threshold_08 = sample_cohens_d > 0.8;
+sample_cohens_d_threshold_12 = sample_cohens_d > 1.2;
 
 % Finally, mask all important images with the MNI152 mask
 MNI_mask = spm_vol(MNI_mask_file);
@@ -118,6 +119,13 @@ Vout.fname = 'Biobank_4000_cohens_d_08.nii'; % crucially, change the file name!
 Vout.descrip = 'Cohens d thresholded at c = 0.8'; % Actually, put something more
                                         % informative here
 spm_write_vol(Vout, sample_cohens_d_threshold_08);
+
+% 1.2 Thresholded Cohen's d 
+Vout = VY;
+Vout.fname = 'Biobank_4000_cohens_d_12.nii'; % crucially, change the file name!
+Vout.descrip = 'Cohens d thresholded at c = 1.2'; % Actually, put something more
+                                        % informative here
+spm_write_vol(Vout, sample_cohens_d_threshold_12);
 
 % Sample mean image
 Vout = VY;
