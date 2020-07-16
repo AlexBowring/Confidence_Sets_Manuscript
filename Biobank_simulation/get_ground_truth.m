@@ -45,7 +45,7 @@ for i=1:length(shuffle_ids)
     %%VM = (reshape(spm_read_vols(VY), [prod(dim) 1]) ~= 0);
     VM = spm_vol(fullfile(outdir, mask_name));
     sum_datamat = sum_datamat + reshape(spm_read_vols(VY), [prod(dim) 1]);
-    sum_datamat_squard = sum_datamat_squared + reshape(spm_read_vols(VY), [prod(dim) 1]).^2;
+    sum_datamat_squared = sum_datamat_squared + reshape(spm_read_vols(VY), [prod(dim) 1]).^2;
     sum_maskmat = sum_maskmat + reshape(spm_read_vols(VM), [prod(dim) 1]);
     
     % Delete copied and gunzipped mask and cope files now we are done
@@ -65,16 +65,16 @@ sum_maskmat_minus_one = sum_maskmat - ones(dim);
 more_than_100 = sum_maskmat > 99;
 
 sample_mean = sum_datamat./sum_maskmat;
-sample_mean(isnan(sample_mean))=0;
+sample_mean(isnan(sample_mean)|isinf(sample_mean))=0;
 sample_mean = sample_mean.*more_than_100;
 
 sample_variance = sum_datamat_squared./sum_maskmat_minus_one - (sum_datamat.^2)./(sum_maskmat.*sum_maskmat_minus_one);
-sample_variance(isnan(sample_variance)) = 0;
+sample_variance(isnan(sample_variance)|isinf(sample_variance)) = 0;
 sample_variance = sample_variance.*more_than_100;
 sample_sd = sqrt(sample_variance);
 
 sample_cohens_d = sample_mean./sample_sd;
-sample_cohens_d(isnan(sample_cohens_d)) = 0;
+sample_cohens_d(isnan(sample_cohens_d)|isinf(sample_cohens_d)) = 0;
 
 sample_cohens_d_threshold_02 = sample_cohens_d > 0.2;
 sample_cohens_d_threshold_05 = sample_cohens_d > 0.5;
