@@ -16,11 +16,9 @@ MNI_mask_file = fullfile(outdir, MNI_mask_name);
 % List all copefiles in the directory
 cope_files = cellstr(spm_select('FPList', basedir, ['.*\_cope5_MNI.nii.gz']));
 mask_files = cellstr(spm_select('FPList', basedir, ['.*\_mask_MNI.nii.gz']));
-%cope_files = cellstr(spm_select('FPList', basedir, ['.*\cope.nii.gz']));
 
 % Select 4000 random copes from the total 8945 available
-shuffle_ids = randperm(length(cope_files)); 
-%shuffle_ids = randperm(8945, 4000);
+shuffle_ids = randperm(8945, 4000);
 
 
 dim = [91, 109, 91];
@@ -42,7 +40,6 @@ for i=1:length(shuffle_ids)
     gunzip(fullfile(outdir, [mask_name mask_ext]));
     
     VY = spm_vol(fullfile(outdir, cope_name));
-    %%VM = (reshape(spm_read_vols(VY), [prod(dim) 1]) ~= 0);
     VM = spm_vol(fullfile(outdir, mask_name));
     sum_datamat = sum_datamat + reshape(spm_read_vols(VY), [prod(dim) 1]);
     sum_datamat_squared = sum_datamat_squared + reshape(spm_read_vols(VY), [prod(dim) 1]).^2;
