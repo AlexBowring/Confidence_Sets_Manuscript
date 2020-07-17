@@ -1,23 +1,28 @@
-%------------Define parameters
-% SvNm = 'LinearSig';
-% Sample size of Biobank subset to use on each realisation
-nSubj  = 120;
-% Number of toy runs
-nRlz = 300;
+function Algorithm_1(nSubj, SvNm, nRlz, thr)
 
-ground_truth_dir = '/Users/maullz/Desktop/Work_Folders/Confidence_Sets_Manuscript/Biobank_simulation/ground_truth_files';
+%------------Starting Up initialization
+if (nargin<1)
+  nSubj  = 60;  % Number of subjects
+end
+if (nargin<2)
+  SvNm  = 'Normsim';  % Save name
+end
+if (nargin<3)
+  nRlz = 5000;
+end  
+if (nargin<4)
+  thr = 0.5;
+end 
+if exist([SvNm '.mat'], 'file')
+  error('Will not overwrite sim result')
+end
+
+% Define parameters 
+ground_truth_dir = '/gpfs2/well/nichols/users/bas627/Confidence_Sets_Manuscript/Biobank_simulation/ground_truth_files';
 Biobank_dir = '/well/nichols/projects/UKB/IMAGING/ContourInf/MNI';
 tau     = 1/sqrt(nSubj);
 nBoot   = 5000;
 dim     = [91 109 91];				 
-thr     = 0.5;
-
-%-----------Initialization of Some Variables
-%wdim        = dim + 2*ceil(rimFWHM*smo)*ones(1,3);  % Working image dimension
-%trunc_x     = {(ceil(rimFWHM*smo)+1):(ceil(rimFWHM*smo)+dim(1))};
-%trunc_y     = {(ceil(rimFWHM*smo)+1):(ceil(rimFWHM*smo)+dim(2))};
-%trunc_z     = {(ceil(rimFWHM*smo)+1):(ceil(rimFWHM*smo)+dim(3))};
-%trnind      = cat(2, trunc_x, trunc_y, trunc_z);
 
 observed_data  = zeros([prod(dim) nSubj]);
 
@@ -83,22 +88,44 @@ middle_contour_volume   = sum(middle_contour(:));
 cohen_d_boundary_edges   = getBdryparams(cohen_d, thr);
 n_cohen_d_boundary_edges = size(getBdryvalues(cohen_d, cohen_d_boundary_edges),1);
 
+% Removing subjects that were used to get ground truth
+ground_truth_subjects = load(fullfile(ground_truth_dir,'4000_random_sample.mat'));
+cope_files = cellstr(spm_select('FPList', Biobank_dir, ['.*\_cope5_MNI.nii.gz']));
+% We have a total of 8945 Biobank subject-level cope files...
+total_subjects = 1:8945;
+% but importantly, we remove the files we used to create the ground truth!
+total_subjects = setdiff(total_subjects, ground_truth_subjects.shuffle_ids);
+
 for t=1:nRlz
     fprintf('.');
     observed_mean = zeros(prod(dim),1);
     observed_std  = zeros(prod(dim),1);
+    % Create a random subset of nSubj subjects from the Biobank data
+    subset_of_subjects = total_subjects(randperm(size(total_subjects,2), nSubj));
       for i=1:nSubj
-	    %
-	    % Generate random realizations of signal + noise
-	    %
-        Noise = create_noise(wdim, 'homo', 1, smo, trnind);
-        Noise = Noise.*non_stationary_var;
-        tImgs = Sig + Noise; % Creates the true image of smoothed signal + smoothed noise        
+        % Load in Biobank subject-level copes 
+        if t < floor(size(total_subjects,2)/nSubj)
+            subject_cope = cope_files{total_subjects(i + (t-1)*nSubj)};
+        else
+            subject_cope = spm_vol(cope_files{subset_of_subjects(i)});
+        end
+        
+        % We have to copy and unzip tImgs because octave cant deal with .gz
+        [~, subject_cope_name, subject_cope_ext] = fileparts(subject_cope);
+        % Copying it to the groun_truth_dir where I can unzip and delete it
+        copyfile(subject_cope, ground_truth_dir);
+        gunzip(fullfile(ground_truth_dir, [subject_cope_name subject_cope_ext]));
+        
+        tImgs = spm_vol(fullfile(ground_truth_dir, subject_cope_name));
+        tImgs = spm_read_vols(tImgs);
         tImgs = reshape(tImgs, [prod(dim), 1]);
         
         observed_data(:,i) = tImgs; 
         observed_mean = observed_mean + tImgs;
         observed_std  = observed_std + tImgs.^2;
+        
+        % Now we're done with the cope file, we delete it
+        delete(fullfile(ground_truth_dir, subject_cope_name));
         
       end %========== Loop i (subjects)
       
