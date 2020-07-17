@@ -104,11 +104,7 @@ for t=1:nRlz
     subset_of_subjects = total_subjects(randperm(size(total_subjects,2), nSubj));
       for i=1:nSubj
         % Load in Biobank subject-level copes 
-        if t < floor(size(total_subjects,2)/nSubj)
-            subject_cope = cope_files{total_subjects(i + (t-1)*nSubj)};
-        else
-            subject_cope = spm_vol(cope_files{subset_of_subjects(i)});
-        end
+        subject_cope = cope_files{total_subjects(i + (t-1)*nSubj)};
         
         % We have to copy and unzip tImgs because octave cant deal with .gz
         [~, subject_cope_name, subject_cope_ext] = fileparts(subject_cope);
