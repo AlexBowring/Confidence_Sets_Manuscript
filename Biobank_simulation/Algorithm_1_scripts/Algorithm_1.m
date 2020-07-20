@@ -79,8 +79,8 @@ supG_observed_store              = zeros(nBoot, nRlz);
 supG_raw                         = zeros(nBoot,1);
 supG_observed                    = zeros(nBoot,1);
 
-cohen_d = spm_vol(fullfile(ground_truth_dir, 'Biobank_4000_cohens_d.nii'));
-cohen_d = spm_read_vols(cohen_d);
+cohen_d_unmasked = spm_vol(fullfile(ground_truth_dir, 'Biobank_4000_cohens_d.nii'));
+cohen_d_unmasked = spm_read_vols(cohen_d_unmasked);
 
 % Removing subjects that were used to get ground truth
 ground_truth_subjects = load(fullfile(ground_truth_dir,'4000_random_sample.mat'));
@@ -152,7 +152,7 @@ for t=1:nRlz
       observed_cohen_d = observed_cohen_d.*intersection_mask;
       
       % ... and we only want to consider the ground truth in the mask too
-      cohen_d = cohen_d.*reshape(intersection_mask, dim);
+      cohen_d = cohen_d_unmasked.*reshape(intersection_mask, dim);
       AC                      = cohen_d >= thr;
       middle_contour          = AC;
       middle_contour_volume   = sum(middle_contour(:));
