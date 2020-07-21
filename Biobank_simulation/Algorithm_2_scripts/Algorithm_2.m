@@ -113,11 +113,11 @@ for t=1:nRlz
         % We have to copy and unzip tImgs because octave cant deal with .gz
         [~, subject_cope_name, subject_cope_ext] = fileparts(subject_cope);
         % Copying it to the groun_truth_dir where I can unzip and delete it
-        copyfile(subject_cope, ground_truth_dir);
-        gunzip(fullfile(ground_truth_dir, [subject_cope_name subject_cope_ext]));
+        copyfile(subject_cope, pwd);
+        gunzip(fullfile(pwd, [subject_cope_name subject_cope_ext]));
         
         
-        tImgs = spm_vol(fullfile(ground_truth_dir, subject_cope_name));
+        tImgs = spm_vol(fullfile(pwd, subject_cope_name));
         tImgs = spm_read_vols(tImgs);
         tImgs = reshape(tImgs, [prod(dim), 1]);
         
@@ -128,18 +128,18 @@ for t=1:nRlz
         % We have to copy and unzip tImgs because octave cant deal with .gz
         [~, subject_mask_name, subject_mask_ext] = fileparts(subject_mask);
         % Copying it to the groun_truth_dir where I can unzip and delete it
-        copyfile(subject_mask, ground_truth_dir);
-        gunzip(fullfile(ground_truth_dir, [subject_mask_name subject_mask_ext]));
+        copyfile(subject_mask, pwd);
+        gunzip(fullfile(pwd, [subject_mask_name subject_mask_ext]));
         
-        subject_mask = spm_vol(fullfile(ground_truth_dir, subject_mask_name));
+        subject_mask = spm_vol(fullfile(pwd, subject_mask_name));
         subject_mask = spm_read_vols(subject_mask);
         subject_mask = reshape(subject_mask, [prod(dim), 1]);
         
         intersection_mask = intersection_mask + subject_mask; 
         
         % Now we're done with the cope and mask files, we delete them
-        delete(fullfile(ground_truth_dir, subject_cope_name));
-        delete(fullfile(ground_truth_dir, subject_mask_name));
+        delete(fullfile(pwd, subject_cope_name));
+        delete(fullfile(pwd, subject_mask_name));
         
       end %========== Loop i (subjects)
       
