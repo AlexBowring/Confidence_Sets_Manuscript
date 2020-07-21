@@ -110,8 +110,14 @@ for t=1:nRlz
     % Create a random subset of nSubj subjects from the Biobank data
     subset_of_subjects = total_subjects(randperm(size(total_subjects,2), nSubj));
       for i=1:nSubj
-        % Load in Biobank subject-level copes 
-        subject_cope = cope_files{total_subjects(i + (t-1)*nSubj)};
+        % Load in Biobank subject-level copes and mask
+        if t <= floor(4945/nSubj)
+            subject_cope = cope_files{total_subjects(i + (t-1)*nSubj)};
+            subject_mask = mask_files{total_subjects(i + (t-1)*nSubj)};
+        else
+            subject_cope = cope_files{subset_of_subjects(i)};
+            subject_mask = mask_files{subset_of_subjects(i)};
+        end
         
         % We have to copy and unzip tImgs because octave cant deal with .gz
         [~, subject_cope_name, subject_cope_ext] = fileparts(subject_cope);
@@ -128,8 +134,6 @@ for t=1:nRlz
         observed_mean = observed_mean + tImgs;
         observed_std  = observed_std + tImgs.^2;
         
-        % Now we get the mask data
-        subject_mask = mask_files{total_subjects(i + (t-1)*nSubj)};
         % We have to copy and unzip tImgs because octave cant deal with .gz
         [~, subject_mask_name, subject_mask_ext] = fileparts(subject_mask);
         % Copying it to the groun_truth_dir where I can unzip and delete it

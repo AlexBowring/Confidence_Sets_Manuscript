@@ -101,17 +101,23 @@ for t=1:nRlz
     % Create a random subset of nSubj subjects from the Biobank data
     subset_of_subjects = total_subjects(randperm(size(total_subjects,2), nSubj));
       for i=1:nSubj
-        % Load in Biobank subject-level copes 
-        subject_cope = cope_files{total_subjects(i + (t-1)*nSubj)};
+        % Load in Biobank subject-level copes and mask
+        if t <= floor(4945/nSubj)
+            subject_cope = cope_files{total_subjects(i + (t-1)*nSubj)};
+            subject_mask = mask_files{total_subjects(i + (t-1)*nSubj)};
+        else
+            subject_cope = cope_files{subset_of_subjects(i)};
+            subject_mask = mask_files{subset_of_subjects(i)};
+        end
         
-        % We have to copy and unzip tImgs because octave cant deal with .gz
+        % We have to copy and unzip because octave cant deal with .gz
         [~, subject_cope_name, subject_cope_ext] = fileparts(subject_cope);
-        % Copying it to the groun_truth_dir where I can unzip and delete it
-        copyfile(subject_cope, ground_truth_dir);
-        gunzip(fullfile(ground_truth_dir, [subject_cope_name subject_cope_ext]));
+        % Copying it to the pwd where I can unzip and delete it
+        copyfile(subject_cope, pwd);
+        gunzip(fullfile(pwd, [subject_cope_name subject_cope_ext]));
         
         
-        tImgs = spm_vol(fullfile(ground_truth_dir, subject_cope_name));
+        tImgs = spm_vol(fullfile(pwd, subject_cope_name));
         tImgs = spm_read_vols(tImgs);
         tImgs = reshape(tImgs, [prod(dim), 1]);
         
@@ -119,23 +125,21 @@ for t=1:nRlz
         observed_mean = observed_mean + tImgs;
         observed_std  = observed_std + tImgs.^2;
         
-        % Now we get the mask data
-        subject_mask = mask_files{total_subjects(i + (t-1)*nSubj)};
-        % We have to copy and unzip tImgs because octave cant deal with .gz
+        % We have to copy and unzip because octave cant deal with .gz
         [~, subject_mask_name, subject_mask_ext] = fileparts(subject_mask);
-        % Copying it to the groun_truth_dir where I can unzip and delete it
-        copyfile(subject_mask, ground_truth_dir);
-        gunzip(fullfile(ground_truth_dir, [subject_mask_name subject_mask_ext]));
+        % Copying it to the pwd where I can unzip and delete it
+        copyfile(subject_mask, pwd);
+        gunzip(fullfile(pwd, [subject_mask_name subject_mask_ext]));
         
-        subject_mask = spm_vol(fullfile(ground_truth_dir, subject_mask_name));
+        subject_mask = spm_vol(fullfile(pwd, subject_mask_name));
         subject_mask = spm_read_vols(subject_mask);
         subject_mask = reshape(subject_mask, [prod(dim), 1]);
         
         intersection_mask = intersection_mask + subject_mask; 
         
         % Now we're done with the cope and mask files, we delete them
-        delete(fullfile(ground_truth_dir, subject_cope_name));
-        delete(fullfile(ground_truth_dir, subject_mask_name));
+        delete(fullfile(pwd, subject_cope_name));
+        delete(fullfile(pwd, subject_mask_name));
         
       end %========== Loop i (subjects)
             
