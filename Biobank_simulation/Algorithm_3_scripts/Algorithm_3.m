@@ -115,13 +115,14 @@ for t=1:nRlz
             subject_cope = cope_files{total_subjects(i + (t-1)*nSubj + (tID - 1)*nRlz*nSubj)};
             subject_mask = mask_files{total_subjects(i + (t-1)*nSubj)};
         elseif tID == floor(4945/(nsubj*nRlz) + 1)
-            k = floor((4945 - tID*nRlz*nSubj)/nSubj)
+            k = floor((4945 - tID*nRlz*nSubj)/nSubj);
             if t <= k
               subject_cope = cope_files{total_subjects(i + (t-1)*nSubj + (tID - 1)*nRlz*nSubj)};
               subject_mask = mask_files{total_subjects(i + (t-1)*nSubj)};
             else
               subject_cope = cope_files{subset_of_subjects(i)};
               subject_mask = mask_files{subset_of_subjects(i)};
+            end 
         else
             subject_cope = cope_files{subset_of_subjects(i)};
             subject_mask = mask_files{subset_of_subjects(i)};

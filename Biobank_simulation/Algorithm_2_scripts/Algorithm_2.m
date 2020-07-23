@@ -113,6 +113,7 @@ for t=1:nRlz
             else
               subject_cope = cope_files{subset_of_subjects(i)};
               subject_mask = mask_files{subset_of_subjects(i)};
+            end 
         else
             subject_cope = cope_files{subset_of_subjects(i)};
             subject_mask = mask_files{subset_of_subjects(i)};
