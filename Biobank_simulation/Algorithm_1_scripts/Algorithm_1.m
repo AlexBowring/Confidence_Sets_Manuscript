@@ -1,4 +1,4 @@
-function Algorithm_1(nSubj, SvNm, nRlz, thr)
+function Algorithm_1(nSubj, SvNm, nRlz, thr, tID)
 
 %------------Starting Up initialization
 if (nargin<1)
@@ -102,9 +102,17 @@ for t=1:nRlz
     subset_of_subjects = total_subjects(randperm(size(total_subjects,2), nSubj));
       for i=1:nSubj
         % Load in Biobank subject-level copes and mask
-        if t <= floor(4945/nSubj)
-            subject_cope = cope_files{total_subjects(i + (t-1)*nSubj)};
+        if tID <= floor(4945/(nSubj*nRlz))
+            subject_cope = cope_files{total_subjects(i + (t-1)*nSubj + (tID - 1)*nRlz*nSubj)};
             subject_mask = mask_files{total_subjects(i + (t-1)*nSubj)};
+        elseif tID == floor(4945/(nsubj*nRlz) + 1)
+            k = floor((4945 - tID*nRlz*nSubj)/nSubj)
+            if t <= k
+              subject_cope = cope_files{total_subjects(i + (t-1)*nSubj + (tID - 1)*nRlz*nSubj)};
+              subject_mask = mask_files{total_subjects(i + (t-1)*nSubj)};
+            else
+              subject_cope = cope_files{subset_of_subjects(i)};
+              subject_mask = mask_files{subset_of_subjects(i)};
         else
             subject_cope = cope_files{subset_of_subjects(i)};
             subject_mask = mask_files{subset_of_subjects(i)};
