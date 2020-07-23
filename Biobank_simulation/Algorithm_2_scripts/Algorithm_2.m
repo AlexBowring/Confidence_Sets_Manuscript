@@ -93,6 +93,12 @@ total_subjects = 1:8945;
 % but importantly, we remove the files we used to create the ground truth!
 total_subjects = setdiff(total_subjects, ground_truth_subjects.shuffle_ids);
 
+% Making a temporary dir to copy and unzip nii.gz images
+if ~isdir(fullfile(pwd, sprintf('%03d',tID)))
+  mkdir(fullfile(pwd, sprintf('%03d',tID)))
+  temp_dir = fullfile(pwd, sprintf('%03d',tID))
+end
+
 for t=1:nRlz
     fprintf('.');
     observed_mean = zeros(prod(dim),1);
@@ -121,12 +127,12 @@ for t=1:nRlz
         
         % We have to copy and unzip tImgs because octave cant deal with .gz
         [~, subject_cope_name, subject_cope_ext] = fileparts(subject_cope);
-        % Copying it to the groun_truth_dir where I can unzip and delete it
-        copyfile(subject_cope, pwd);
-        gunzip(fullfile(pwd, [subject_cope_name subject_cope_ext]));
+        % Copying it to the temp_dir where I can unzip and delete it
+        copyfile(subject_cope, temp_dir);
+        gunzip(fullfile(temp_dir, [subject_cope_name subject_cope_ext]));
         
         
-        tImgs = spm_vol(fullfile(pwd, subject_cope_name));
+        tImgs = spm_vol(fullfile(temp_dir, subject_cope_name));
         tImgs = spm_read_vols(tImgs);
         tImgs = reshape(tImgs, [prod(dim), 1]);
         
@@ -136,19 +142,19 @@ for t=1:nRlz
         
         % We have to copy and unzip tImgs because octave cant deal with .gz
         [~, subject_mask_name, subject_mask_ext] = fileparts(subject_mask);
-        % Copying it to the groun_truth_dir where I can unzip and delete it
-        copyfile(subject_mask, pwd);
-        gunzip(fullfile(pwd, [subject_mask_name subject_mask_ext]));
+        % Copying it to the temp_dir where I can unzip and delete it
+        copyfile(subject_mask, temp_dir);
+        gunzip(fullfile(temp_dir, [subject_mask_name subject_mask_ext]));
         
-        subject_mask = spm_vol(fullfile(pwd, subject_mask_name));
+        subject_mask = spm_vol(fullfile(temp_dir, subject_mask_name));
         subject_mask = spm_read_vols(subject_mask);
         subject_mask = reshape(subject_mask, [prod(dim), 1]);
         
         intersection_mask = intersection_mask + subject_mask; 
         
         % Now we're done with the cope and mask files, we delete them
-        delete(fullfile(pwd, subject_cope_name));
-        delete(fullfile(pwd, subject_mask_name));
+        delete(fullfile(temp_dir, subject_cope_name));
+        delete(fullfile(temp_dir, subject_mask_name));
         
       end %========== Loop i (subjects)
       
@@ -482,6 +488,8 @@ for t=1:nRlz
     end 
                               
 end
+
+rmdir(temp_dir)
 
 percentage_success_vector_raw_80                         = mean(subset_success_vector_raw_80, 1);
 percentage_success_vector_raw_90                         = mean(subset_success_vector_raw_90, 1);
