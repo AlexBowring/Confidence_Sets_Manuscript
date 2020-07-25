@@ -79,6 +79,12 @@ supG_observed_store              = zeros(nBoot, nRlz);
 supG_raw                         = zeros(nBoot,1);
 supG_observed                    = zeros(nBoot,1);
 
+% Storing the number of violations of the subset condition for the 95% CSs
+upper_contour_95_violation = zeros(nRlz, 1);
+upper_contour_95_violation_boundary = zeros(nRlz, 1);
+lower_contour_95_violation = zeros(nRlz, 1);
+lower_contour_95_violation_boundary = zeros(nRlz, 1);
+
 cohen_d_unmasked = spm_vol(fullfile(ground_truth_dir, 'Biobank_4000_cohens_d.nii'));
 cohen_d_unmasked = spm_read_vols(cohen_d_unmasked);
 
@@ -479,7 +485,13 @@ for t=1:nRlz
     else 
       subset_success_vector_observed_95_alternate(t) = 0; 
       fprintf('observed nominal 95 alternate true boundary failure! \n');
-    end 
+    end
+    
+    % Storing how the violation occured
+    upper_contour_95_violation(t) = sum(upper_subset_mid_observed_95(:));
+    upper_contour_95_violation_boundary(t) = sum(upper_condition_95_observed_success);
+    lower_contour_95_violation(t) = sum(mid_subset_lower_observed_95(:));
+    lower_contour_95_violation_boundary(t) = sum(lower_condition_95_observed_success);
                               
 end
 
@@ -508,4 +520,5 @@ eval(['save ' SvNm ' nSubj nRlz rimFWHM thr nBoot '...
       'supG_raw_store supG_observed_store '...
       'middle_contour_volume '...
       'lower_contour_raw_80_volume_prct_store lower_contour_raw_90_volume_prct_store lower_contour_raw_95_volume_prct_store lower_contour_observed_80_volume_prct_store lower_contour_observed_90_volume_prct_store lower_contour_observed_95_volume_prct_store '...
-      'upper_contour_raw_80_volume_prct_store upper_contour_raw_90_volume_prct_store upper_contour_raw_95_volume_prct_store upper_contour_observed_80_volume_prct_store upper_contour_observed_90_volume_prct_store upper_contour_observed_95_volume_prct_store'])
+      'upper_contour_raw_80_volume_prct_store upper_contour_raw_90_volume_prct_store upper_contour_raw_95_volume_prct_store upper_contour_observed_80_volume_prct_store upper_contour_observed_90_volume_prct_store upper_contour_observed_95_volume_prct_store'...
+      'upper_contour_95_violation upper_contour_95_violation_boundary lower_contour_95_violation lower_contour_95_violation_boundary'])
