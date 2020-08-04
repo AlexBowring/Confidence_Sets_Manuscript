@@ -97,7 +97,7 @@ for i = 1:nominal_levels_dim(2)
             observed_sensitivity_result         = (temp.(observed_volume_prct_store)'*temp.(observed_subset_success))/nRlz;
             nSubj                               = sprintf('nSubj');
             sim_covering_levels_and_subs(1,k,j,i) = raw_sensitivity_result;
-            sim_covering_levels_and_subs(2,k,j,i) = temp.observed_sensitivity_result;
+            sim_covering_levels_and_subs(2,k,j,i) = observed_sensitivity_result;
             sim_covering_levels_and_subs(3,k,j,i) = temp.(nSubj);
         end
     end
