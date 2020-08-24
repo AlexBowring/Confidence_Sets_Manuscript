@@ -166,6 +166,7 @@ for t=1:nRlz
 
       % We only consider the observed data in the intersection mask
       intersection_mask = intersection_mask > nSubj - 1;
+      intersection_mask = intersection_mask.*reshape(MNI_mask_file, [prod(dim) 1]);
       observed_mean = observed_mean.*intersection_mask;
       observed_std = observed_std.*intersection_mask;
       observed_cohen_d = observed_cohen_d.*intersection_mask;
