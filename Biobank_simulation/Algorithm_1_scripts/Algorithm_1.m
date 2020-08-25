@@ -97,7 +97,9 @@ mask_files = cellstr(spm_select('FPList', Biobank_dir, ['.*\_mask_MNI.nii.gz']))
 % We have a total of 8945 Biobank subject-level cope files...
 total_subjects = 1:8945;
 % but importantly, we remove the files we used to create the ground truth!
-total_subjects = setdiff(total_subjects, ground_truth_subjects.shuffle_ids);
+%%total_subjects = setdiff(total_subjects, ground_truth_subjects.shuffle_ids);
+% testing the simulation by using the held-out data instead
+total_subjects = ground_truth_subjects.shuffle_ids; 
 
 % Making a temporary dir to copy and unzip nii.gz images
 if ~isdir(fullfile(pwd, sprintf('%03d',tID)))
