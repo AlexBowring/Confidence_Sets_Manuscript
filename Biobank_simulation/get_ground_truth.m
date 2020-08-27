@@ -7,11 +7,8 @@ basedir = '/well/nichols/projects/UKB/IMAGING/ContourInf/MNI';
 outdir = '/well/nichols/users/bas627/Confidence_Sets_Manuscript/Biobank_simulation/ground_truth_files';
 
 % Path to MNI mask image;
-MNI_mask_file = '/well/nichols/shared/fsl/6.0.3/data/standard/MNI152_T1_2mm_brain_mask.nii.gz';
+MNI_mask_name = 'MNI152_T1_2mm_brain_mask.nii';
 % Copying and gunzipping because Octave cant handle .gz files 
-[MNI_mask_filepath, MNI_mask_name, MNI_mask_ext] = fileparts(MNI_mask_file);
-copyfile(MNI_mask_file, outdir);
-gunzip(fullfile(outdir, [MNI_mask_name MNI_mask_ext]));
 MNI_mask_file = fullfile(outdir, MNI_mask_name);
 
 
@@ -30,27 +27,30 @@ sum_datamat = zeros([prod(dim) 1]);
 sum_datamat_squared = zeros([prod(dim) 1]);
 sum_maskmat = zeros([prod(dim) 1]);
 
+temp_dir = fullfile(outdir, sprintf('%03d', tID));
+mkdir(temp_dir)
 
 for i=1:length(shuffle_ids)
     % We have to gunzip the files, Octave can't work with compressed files
     [mask_filepath, mask_name, mask_ext] = fileparts(mask_files{shuffle_ids(i)});
     [cope_filepath, cope_name, cope_ext] = fileparts(cope_files{shuffle_ids(i)});
     
-    copyfile(cope_files{shuffle_ids(i)}, outdir);
-    copyfile(mask_files{shuffle_ids(i)}, outdir);
+    copyfile(cope_files{shuffle_ids(i)}, temp_dir);
+    copyfile(mask_files{shuffle_ids(i)}, temp_dir);
     
-    gunzip(fullfile(outdir, [cope_name cope_ext]));
-    gunzip(fullfile(outdir, [mask_name mask_ext]));
+    gunzip(fullfile(temp_dir, [cope_name cope_ext]));
+    gunzip(fullfile(temp_dir, [mask_name mask_ext]));
     
-    VY = spm_vol(fullfile(outdir, cope_name));
-    VM = spm_vol(fullfile(outdir, mask_name));
+    VY = spm_vol(fullfile(temp_dir, cope_name));
+    VM = spm_vol(fullfile(temp_dir, mask_name));
     sum_datamat = sum_datamat + reshape(spm_read_vols(VY), [prod(dim) 1]);
     sum_datamat_squared = sum_datamat_squared + reshape(spm_read_vols(VY), [prod(dim) 1]).^2;
     sum_maskmat = sum_maskmat + reshape(spm_read_vols(VM), [prod(dim) 1]);
     
     % Delete copied and gunzipped mask and cope files now we are done
-    delete(fullfile(outdir, cope_name));
-    delete(fullfile(outdir, mask_name));
+    delete(fullfile(temp_dir, cope_name));
+    delete(fullfile(temp_dir, mask_name));
+    rmdir(temp_dir)
     
 end
 
