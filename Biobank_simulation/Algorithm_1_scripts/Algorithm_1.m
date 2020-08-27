@@ -99,7 +99,15 @@ total_subjects = 1:8945;
 % but importantly, we remove the files we used to create the ground truth!
 %%total_subjects = setdiff(total_subjects, ground_truth_subjects.shuffle_ids);
 % testing the simulation by using the held-out data instead
-total_subjects = ground_truth_subjects.shuffle_ids; 
+%%total_subjects = ground_truth_subjects.shuffle_ids; 
+
+union_of_ground_truths = fullfile(ground_truth_dir, '100_ground_truths', '100_Biobank_4000_cohens_d_05_threshold_intersection.nii');
+union_of_ground_truths = spm_vol(union_of_ground_truths);
+union_of_ground_truths = spm_read_vols(union_of_ground_truths);
+
+intersection_of_ground_truths = fullfile(ground_truth_dir, '100_ground_truths', '100_Biobank_4000_cohens_d_05_threshold_union.nii');
+intersection_of_ground_truths = spm_vol(intersection_of_ground_truths);
+intersection_of_ground_truths = spm_read_vols(intersection_of_ground_truths);
 
 % Making a temporary dir to copy and unzip nii.gz images
 if ~isdir(fullfile(pwd, sprintf('%03d',tID)))
@@ -116,11 +124,11 @@ for t=1:nRlz
     subset_of_subjects = total_subjects(randperm(size(total_subjects,2), nSubj));
       for i=1:nSubj
         % Load in Biobank subject-level copes and mask
-        if tID <= floor(4000/(nSubj*nRlz))
+        if tID <= floor(length(total_subjects)/(nSubj*nRlz))
             subject_cope = cope_files{total_subjects(i + (t-1)*nSubj + (tID - 1)*nRlz*nSubj)};
             subject_mask = mask_files{total_subjects(i + (t-1)*nSubj)};
-        elseif tID == floor(4000/(nSubj*nRlz) + 1)
-            k = floor((4000 - tID*nRlz*nSubj)/nSubj)
+        elseif tID == floor(length(total_subjects)/(nSubj*nRlz) + 1)
+            k = floor((length(total_subjects) - tID*nRlz*nSubj)/nSubj)
             if t <= k
               subject_cope = cope_files{total_subjects(i + (t-1)*nSubj + (tID - 1)*nRlz*nSubj)};
               subject_mask = mask_files{total_subjects(i + (t-1)*nSubj)};
@@ -244,8 +252,8 @@ for t=1:nRlz
     upper_contour_raw_80             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr + supGa_raw_80*tau*observed_cohen_d_std;
     lower_contour_raw_80_volume_prct = sum(lower_contour_raw_80(:))/middle_contour_volume;
     upper_contour_raw_80_volume_prct = sum(upper_contour_raw_80(:))/middle_contour_volume;
-    mid_on_upper_raw_80              = upper_contour_raw_80.*middle_contour;
-    lower_on_mid_raw_80              = middle_contour.*lower_contour_raw_80;
+    mid_on_upper_raw_80              = upper_contour_raw_80.*union_of_ground_truths;
+    lower_on_mid_raw_80              = intersection_of_ground_truths.*lower_contour_raw_80;
     upper_subset_mid_raw_80          = upper_contour_raw_80 - mid_on_upper_raw_80;
     mid_subset_lower_raw_80          = middle_contour - lower_on_mid_raw_80;
     
@@ -253,8 +261,8 @@ for t=1:nRlz
     upper_contour_raw_90             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr + supGa_raw_90*tau*observed_cohen_d_std;
     lower_contour_raw_90_volume_prct = sum(lower_contour_raw_90(:))/middle_contour_volume;
     upper_contour_raw_90_volume_prct = sum(upper_contour_raw_90(:))/middle_contour_volume;
-    mid_on_upper_raw_90              = upper_contour_raw_90.*middle_contour;
-    lower_on_mid_raw_90              = middle_contour.*lower_contour_raw_90;
+    mid_on_upper_raw_90              = upper_contour_raw_90.*union_of_ground_truths;
+    lower_on_mid_raw_90              = intersection_of_ground_truths.*lower_contour_raw_90;
     upper_subset_mid_raw_90          = upper_contour_raw_90 - mid_on_upper_raw_90;
     mid_subset_lower_raw_90          = middle_contour - lower_on_mid_raw_90;    
     
@@ -262,8 +270,8 @@ for t=1:nRlz
     upper_contour_raw_95             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr + supGa_raw_95*tau*observed_cohen_d_std;
     lower_contour_raw_95_volume_prct = sum(lower_contour_raw_95(:))/middle_contour_volume;
     upper_contour_raw_95_volume_prct = sum(upper_contour_raw_95(:))/middle_contour_volume;
-    mid_on_upper_raw_95              = upper_contour_raw_95.*middle_contour;
-    lower_on_mid_raw_95              = middle_contour.*lower_contour_raw_95;
+    mid_on_upper_raw_95              = upper_contour_raw_95.*union_of_ground_truths;
+    lower_on_mid_raw_95              = intersection_of_ground_truths.*lower_contour_raw_95;
     upper_subset_mid_raw_95          = upper_contour_raw_95 - mid_on_upper_raw_95;
     mid_subset_lower_raw_95          = middle_contour - lower_on_mid_raw_95;
     
@@ -276,8 +284,8 @@ for t=1:nRlz
     upper_contour_observed_80             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr + supGa_observed_80*tau*observed_cohen_d_std;
     lower_contour_observed_80_volume_prct = sum(lower_contour_observed_80(:))/middle_contour_volume;
     upper_contour_observed_80_volume_prct = sum(upper_contour_observed_80(:))/middle_contour_volume;
-    mid_on_upper_observed_80              = upper_contour_observed_80.*middle_contour;
-    lower_on_mid_observed_80              = middle_contour.*lower_contour_observed_80;
+    mid_on_upper_observed_80              = upper_contour_observed_80.*union_of_ground_truths;
+    lower_on_mid_observed_80              = intersection_of_ground_truths.*lower_contour_observed_80;
     upper_subset_mid_observed_80          = upper_contour_observed_80 - mid_on_upper_observed_80;
     mid_subset_lower_observed_80          = middle_contour - lower_on_mid_observed_80;
     
@@ -285,8 +293,8 @@ for t=1:nRlz
     upper_contour_observed_90             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr + supGa_observed_90*tau*observed_cohen_d_std;
     lower_contour_observed_90_volume_prct = sum(lower_contour_observed_90(:))/middle_contour_volume;
     upper_contour_observed_90_volume_prct = sum(upper_contour_observed_90(:))/middle_contour_volume;
-    mid_on_upper_observed_90              = upper_contour_observed_90.*middle_contour;
-    lower_on_mid_observed_90              = middle_contour.*lower_contour_observed_90;
+    mid_on_upper_observed_90              = upper_contour_observed_90.*union_of_ground_truths;
+    lower_on_mid_observed_90              = intersection_of_ground_truths.*lower_contour_observed_90;
     upper_subset_mid_observed_90          = upper_contour_observed_90 - mid_on_upper_observed_90;
     mid_subset_lower_observed_90          = middle_contour - lower_on_mid_observed_90;    
     
@@ -294,8 +302,8 @@ for t=1:nRlz
     upper_contour_observed_95             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr + supGa_observed_95*tau*observed_cohen_d_std;
     lower_contour_observed_95_volume_prct = sum(lower_contour_observed_95(:))/middle_contour_volume;
     upper_contour_observed_95_volume_prct = sum(upper_contour_observed_95(:))/middle_contour_volume;
-    mid_on_upper_observed_95              = upper_contour_observed_95.*middle_contour;
-    lower_on_mid_observed_95              = middle_contour.*lower_contour_observed_95;
+    mid_on_upper_observed_95              = upper_contour_observed_95.*union_of_ground_truths;
+    lower_on_mid_observed_95              = intersection_of_ground_truths.*lower_contour_observed_95;
     upper_subset_mid_observed_95          = upper_contour_observed_95 - mid_on_upper_observed_95;
     mid_subset_lower_observed_95          = middle_contour - lower_on_mid_observed_95;
 
