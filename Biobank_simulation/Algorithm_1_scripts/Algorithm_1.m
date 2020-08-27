@@ -255,7 +255,7 @@ for t=1:nRlz
     mid_on_upper_raw_80              = upper_contour_raw_80.*union_of_ground_truths;
     lower_on_mid_raw_80              = intersection_of_ground_truths.*lower_contour_raw_80;
     upper_subset_mid_raw_80          = upper_contour_raw_80 - mid_on_upper_raw_80;
-    mid_subset_lower_raw_80          = middle_contour - lower_on_mid_raw_80;
+    mid_subset_lower_raw_80          = intersection_of_ground_truths - lower_on_mid_raw_80;
     
     lower_contour_raw_90             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr - supGa_raw_90*tau*observed_cohen_d_std;
     upper_contour_raw_90             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr + supGa_raw_90*tau*observed_cohen_d_std;
@@ -264,7 +264,7 @@ for t=1:nRlz
     mid_on_upper_raw_90              = upper_contour_raw_90.*union_of_ground_truths;
     lower_on_mid_raw_90              = intersection_of_ground_truths.*lower_contour_raw_90;
     upper_subset_mid_raw_90          = upper_contour_raw_90 - mid_on_upper_raw_90;
-    mid_subset_lower_raw_90          = middle_contour - lower_on_mid_raw_90;    
+    mid_subset_lower_raw_90          = intersection_of_ground_truths - lower_on_mid_raw_90;    
     
     lower_contour_raw_95             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr - supGa_raw_95*tau*observed_cohen_d_std;
     upper_contour_raw_95             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr + supGa_raw_95*tau*observed_cohen_d_std;
@@ -273,7 +273,7 @@ for t=1:nRlz
     mid_on_upper_raw_95              = upper_contour_raw_95.*union_of_ground_truths;
     lower_on_mid_raw_95              = intersection_of_ground_truths.*lower_contour_raw_95;
     upper_subset_mid_raw_95          = upper_contour_raw_95 - mid_on_upper_raw_95;
-    mid_subset_lower_raw_95          = middle_contour - lower_on_mid_raw_95;
+    mid_subset_lower_raw_95          = intersection_of_ground_truths - lower_on_mid_raw_95;
     
     % Observed boundary
     supGa_observed_80                     = prctile(supG_observed, 80);
@@ -287,7 +287,7 @@ for t=1:nRlz
     mid_on_upper_observed_80              = upper_contour_observed_80.*union_of_ground_truths;
     lower_on_mid_observed_80              = intersection_of_ground_truths.*lower_contour_observed_80;
     upper_subset_mid_observed_80          = upper_contour_observed_80 - mid_on_upper_observed_80;
-    mid_subset_lower_observed_80          = middle_contour - lower_on_mid_observed_80;
+    mid_subset_lower_observed_80          = intersection_of_ground_truths - lower_on_mid_observed_80;
     
     lower_contour_observed_90             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr - supGa_observed_90*tau*observed_cohen_d_std;
     upper_contour_observed_90             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr + supGa_observed_90*tau*observed_cohen_d_std;
@@ -296,7 +296,7 @@ for t=1:nRlz
     mid_on_upper_observed_90              = upper_contour_observed_90.*union_of_ground_truths;
     lower_on_mid_observed_90              = intersection_of_ground_truths.*lower_contour_observed_90;
     upper_subset_mid_observed_90          = upper_contour_observed_90 - mid_on_upper_observed_90;
-    mid_subset_lower_observed_90          = middle_contour - lower_on_mid_observed_90;    
+    mid_subset_lower_observed_90          = intersection_of_ground_truths - lower_on_mid_observed_90;    
     
     lower_contour_observed_95             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr - supGa_observed_95*tau*observed_cohen_d_std;
     upper_contour_observed_95             = observed_cohen_d >= (1 - (3/(4*nSubj - 5)))^(-1)*thr + supGa_observed_95*tau*observed_cohen_d_std;
@@ -305,7 +305,7 @@ for t=1:nRlz
     mid_on_upper_observed_95              = upper_contour_observed_95.*union_of_ground_truths;
     lower_on_mid_observed_95              = intersection_of_ground_truths.*lower_contour_observed_95;
     upper_subset_mid_observed_95          = upper_contour_observed_95 - mid_on_upper_observed_95;
-    mid_subset_lower_observed_95          = middle_contour - lower_on_mid_observed_95;
+    mid_subset_lower_observed_95          = intersection_of_ground_truths - lower_on_mid_observed_95;
 
     %
     % Storing all variables of interest
