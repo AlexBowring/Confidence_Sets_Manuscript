@@ -1,3 +1,5 @@
+function get_ground_truth(tID)
+
 % Directory containing the Biobank copes
 basedir = '/well/nichols/projects/UKB/IMAGING/ContourInf/MNI';
 
@@ -17,9 +19,10 @@ MNI_mask_file = fullfile(outdir, MNI_mask_name);
 cope_files = cellstr(spm_select('FPList', basedir, ['.*\_cope5_MNI.nii.gz']));
 mask_files = cellstr(spm_select('FPList', basedir, ['.*\_mask_MNI.nii.gz']));
 
+
+% Making and save 100 ground truth files 
 % Select 4000 random copes from the total 8945 available
 shuffle_ids = randperm(8945, 4000);
-
 
 dim = [91, 109, 91];
 % Empty datamat, datamat_squared and maskmat for loading in the copes
@@ -91,54 +94,53 @@ sample_cohens_d_threshold_12 = sample_cohens_d > 1.2;
 % Cohen's d image
 cd(outdir);
 Vout = VY;
-Vout.fname = 'Biobank_4000_cohens_d.nii'; % crucially, change the file name!
+Vout.fname = sprintf('Image_%03d_Biobank_4000_cohens_d.nii', tID); % crucially, change the file name!
 Vout.descrip = 'Cohens d image from 4000 Biobank subjects'; % Actually, put something more
                                         % informative here
 spm_write_vol(Vout, sample_cohens_d);
 
 % 0.2 Thresholded Cohen's d 
-Vout = VY;
-Vout.fname = 'Biobank_4000_cohens_d_02.nii'; % crucially, change the file name!
-Vout.descrip = 'Cohens d thresholded at c = 0.2'; % Actually, put something more
+%Vout = VY;
+%Vout.fname = sprintf('Image_%03d_Biobank_4000_cohens_d_02.nii', tID); % crucially, change the file name!
+%Vout.descrip = 'Cohens d thresholded at c = 0.2'; % Actually, put something more
                                         % informative here
-spm_write_vol(Vout, sample_cohens_d_threshold_02);
+%spm_write_vol(Vout, sample_cohens_d_threshold_02);
 
 % 0.5 Thresholded Cohen's d 
-Vout = VY;
-Vout.fname = 'Biobank_4000_cohens_d_05.nii'; % crucially, change the file name!
-Vout.descrip = 'Cohens d thresholded at c = 0.5'; % Actually, put something more
+%Vout = VY;
+%Vout.fname = sprintf('Image_%03d_Biobank_4000_cohens_d_05.nii', tID); % crucially, change the file name!
+%Vout.descrip = 'Cohens d thresholded at c = 0.5'; % Actually, put something more
                                         % informative here
-spm_write_vol(Vout, sample_cohens_d_threshold_05);
+%spm_write_vol(Vout, sample_cohens_d_threshold_05);
 
 % 0.8 Thresholded Cohen's d 
-Vout = VY;
-Vout.fname = 'Biobank_4000_cohens_d_08.nii'; % crucially, change the file name!
-Vout.descrip = 'Cohens d thresholded at c = 0.8'; % Actually, put something more
+%Vout = VY;
+%Vout.fname = sprintf('Image_%03d_Biobank_4000_cohens_d_08.nii', tID); % crucially, change the file name!
+%Vout.descrip = 'Cohens d thresholded at c = 0.8'; % Actually, put something more
                                         % informative here
-spm_write_vol(Vout, sample_cohens_d_threshold_08);
+%spm_write_vol(Vout, sample_cohens_d_threshold_08);
 
 % 1.2 Thresholded Cohen's d 
-Vout = VY;
-Vout.fname = 'Biobank_4000_cohens_d_12.nii'; % crucially, change the file name!
-Vout.descrip = 'Cohens d thresholded at c = 1.2'; % Actually, put something more
+%Vout = VY;
+%Vout.fname = sprintf('Image_%03d_Biobank_4000_cohens_d_12.nii'); % crucially, change the file name!
+%Vout.descrip = 'Cohens d thresholded at c = 1.2'; % Actually, put something more
                                         % informative here
-spm_write_vol(Vout, sample_cohens_d_threshold_12);
+%spm_write_vol(Vout, sample_cohens_d_threshold_12);
 
 % Sample mean image
-Vout = VY;
-Vout.fname = 'Biobank_4000_sample_mean.nii'; % crucially, change the file name!
-Vout.descrip = 'sample mean image from 4000 Biobank subjects'; % Actually, put something more
+%Vout = VY;
+%Vout.fname = sprintf('Image_%03d_Biobank_4000_sample_mean.nii', tID); % crucially, change the file name!
+%Vout.descrip = 'sample mean image from 4000 Biobank subjects'; % Actually, put something more
                                         % informative here
-spm_write_vol(Vout, sample_mean);
+%spm_write_vol(Vout, sample_mean);
 
 % Sample standard deviation image
-Vout = VY;
-Vout.fname = 'Biobank_4000_sample_sd.nii'; % crucially, change the file name!
-Vout.descrip = 'sample standard deviation from 4000 Biobank subjects'; % Actually, put something more
+%Vout = VY;
+%Vout.fname = sprintf('Image_%03d_Biobank_4000_sample_sd.nii', tID); % crucially, change the file name!
+%Vout.descrip = 'sample standard deviation from 4000 Biobank subjects'; % Actually, put something more
 
-spm_write_vol(Vout, sample_sd);
+%spm_write_vol(Vout, sample_sd);
 
 % Saving the random sample we choose so this sample is excluded for testing
-save('4000_random_sample.mat', 'shuffle_ids')
-
+save(sprintf('Image_%03d_4000_random_sample.mat', tID), 'shuffle_ids')
 
