@@ -50,9 +50,10 @@ for i=1:length(shuffle_ids)
     % Delete copied and gunzipped mask and cope files now we are done
     delete(fullfile(temp_dir, cope_name));
     delete(fullfile(temp_dir, mask_name));
-    rmdir(temp_dir)
     
 end
+
+rmdir(temp_dir)
 
 sum_datamat = reshape(sum_datamat, dim);
 
