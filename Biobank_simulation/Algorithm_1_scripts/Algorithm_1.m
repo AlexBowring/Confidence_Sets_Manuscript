@@ -101,11 +101,11 @@ total_subjects = 1:8945;
 % testing the simulation by using the held-out data instead
 %%total_subjects = ground_truth_subjects.shuffle_ids; 
 
-union_of_ground_truths = fullfile(ground_truth_dir, '100_ground_truths', '100_Biobank_4000_cohens_d_05_threshold_intersection.nii');
+union_of_ground_truths = fullfile(ground_truth_dir, '100_ground_truths', '100_Biobank_4000_cohens_d_05_threshold_union.nii');
 union_of_ground_truths = spm_vol(union_of_ground_truths);
 union_of_ground_truths = spm_read_vols(union_of_ground_truths);
 
-intersection_of_ground_truths = fullfile(ground_truth_dir, '100_ground_truths', '100_Biobank_4000_cohens_d_05_threshold_union.nii');
+intersection_of_ground_truths = fullfile(ground_truth_dir, '100_ground_truths', '100_Biobank_4000_cohens_d_05_threshold_intersection.nii');
 intersection_of_ground_truths = spm_vol(intersection_of_ground_truths);
 intersection_of_ground_truths = spm_read_vols(intersection_of_ground_truths);
 
