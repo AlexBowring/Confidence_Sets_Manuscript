@@ -101,13 +101,13 @@ total_subjects = 1:8945;
 % testing the simulation by using the held-out data instead
 %%total_subjects = ground_truth_subjects.shuffle_ids; 
 
-union_of_ground_truths = fullfile(ground_truth_dir, '100_ground_truths', '100_Biobank_4000_cohens_d_05_threshold_union.nii');
-union_of_ground_truths = spm_vol(union_of_ground_truths);
-union_of_ground_truths = spm_read_vols(union_of_ground_truths);
+union_of_ground_truths_unmasked = fullfile(ground_truth_dir, '100_ground_truths', '100_Biobank_4000_cohens_d_05_threshold_union.nii');
+union_of_ground_truths_unmasked = spm_vol(union_of_ground_truths_unmasked);
+union_of_ground_truths_unmasked = spm_read_vols(union_of_ground_truths_unmasked);
 
-intersection_of_ground_truths = fullfile(ground_truth_dir, '100_ground_truths', '100_Biobank_4000_cohens_d_05_threshold_intersection.nii');
-intersection_of_ground_truths = spm_vol(intersection_of_ground_truths);
-intersection_of_ground_truths = spm_read_vols(intersection_of_ground_truths);
+intersection_of_ground_truths_unmasked = fullfile(ground_truth_dir, '100_ground_truths', '100_Biobank_4000_cohens_d_05_threshold_intersection.nii');
+intersection_of_ground_truths_unmasked = spm_vol(intersection_of_ground_truths_unmasked);
+intersection_of_ground_truths_unmasked = spm_read_vols(intersection_of_ground_truths_unmasked);
 
 % Making a temporary dir to copy and unzip nii.gz images
 if ~isdir(fullfile(pwd, sprintf('%03d',tID)))
@@ -189,8 +189,8 @@ for t=1:nRlz
       observed_std = observed_std.*intersection_mask;
       observed_cohen_d = observed_cohen_d.*intersection_mask;
       
-      intersection_of_ground_truths = intersection_of_ground_truths.*reshape(intersection_mask,dim) > 0;
-      union_of_ground_truths = union_of_ground_truths.*reshape(intersection_mask,dim) > 0;
+      intersection_of_ground_truths = intersection_of_ground_truths_unmasked.*reshape(intersection_mask,dim) > 0;
+      union_of_ground_truths = union_of_ground_truths_unmasked.*reshape(intersection_mask,dim) > 0;
       
       % ... and we only want to consider the ground truth in the mask too
       cohen_d = cohen_d_unmasked.*reshape(intersection_mask, dim);
