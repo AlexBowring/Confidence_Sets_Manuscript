@@ -189,8 +189,8 @@ for t=1:nRlz
       observed_std = observed_std.*intersection_mask;
       observed_cohen_d = observed_cohen_d.*intersection_mask;
       
-      intersection_of_ground_truths = intersection_of_ground_truths.*reshape(intersection_mask,dim);
-      union_of_ground_truths = union_of_ground_truths.*reshape(intersection_mask,dim);
+      intersection_of_ground_truths = intersection_of_ground_truths.*reshape(intersection_mask,dim) > 0;
+      union_of_ground_truths = union_of_ground_truths.*reshape(intersection_mask,dim) > 0;
       
       % ... and we only want to consider the ground truth in the mask too
       cohen_d = cohen_d_unmasked.*reshape(intersection_mask, dim);
