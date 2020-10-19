@@ -1,4 +1,4 @@
-This Github repository contains all of the code supporting the simulations carried out in the manuscript Spatial Confidence Sets of Standardized Effect Size Images.
+This Github repository contains all of the code supporting the simulations carried out in the manuscript: Spatial Confidence Sets for Standardized Effect Size Images (Bowring, Telschow, Schwartzman and Nichols; 2020). 
 
 Alongside this, we have shared the Human Connectome Project results maps connected to the manuscript in the NeuroVault repository: [https://identifiers.org/neurovault.collection:9019](https://identifiers.org/neurovault.collection:9019). 
 
